@@ -27,6 +27,8 @@ app.get('/peliculas?', controlador.traerTodasLasPeliculas);
 
 app.get('/generos', controlador.traerTodosLosGeneros);
 
+
+
 //seteamos el puerto en el cual va a escuchar los pedidos la aplicación
 var puerto = '8080';
 
