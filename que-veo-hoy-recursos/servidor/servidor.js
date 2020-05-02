@@ -27,9 +27,11 @@ app.get('/peliculas?', controlador.traerTodasLasPeliculas);
 
 app.get('/generos', controlador.traerTodosLosGeneros);
 
-//app.get('/peliculas/:id', controlador.infoPeli); 
-//para obtener la informacion de la pelicula, al conocer el id de la peli, se manda via query_params
+app.get('/peliculas/:id', controlador.infoPeli);
+//para obtener la informacion de la pelicula, al conocer el id de la peli, se manda via path_params
 
+app.get('/peliculas/recomendacion?', controlador.recomendarPeli);
+//para obtener parametros de busqueda se utiliza query_params
 
 
 //seteamos el puerto en el cual va a escuchar los pedidos la aplicación

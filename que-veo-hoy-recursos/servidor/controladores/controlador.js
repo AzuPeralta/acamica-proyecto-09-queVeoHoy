@@ -11,10 +11,29 @@ function traerTodasLasPeliculas(req, res){
     let cantidad = req.query.cantidad;
     let offset = pagina * cantidad
 
-    if (anio){
-        let sql = 'select * from pelicula where anio = ? ORDER BY ?? LIMIT ? offset ?'
+    if (anio && titulo && genero){
+        let sql = 'select * from pelicula where titulo REGEXP ? AND genero_id = ?  AND anio = ? ORDER BY ??'
 
-        conexion.query(sql, [anio, columna_orden, tipo_orden, cantidad, offset], function(error, resultado, fields){
+        conexion.query(sql, [titulo, genero, anio, columna_orden, tipo_orden], function(error, resultado, fields){
+            if(error){
+                console.log("Hubo un error en la consulta", error.message);
+                return res.status(404).send("Hubo un error en la consulta");
+            }
+           // let conteo = resultado.length
+           let conteo = resultado.length
+           console.log(conteo)
+
+            let response = {
+                'peliculas': resultado,
+                'total': conteo,
+            };
+            res.send(JSON.stringify(response));
+    });}
+
+    else if (anio){
+        let sql = 'select * from pelicula where anio = ? ORDER BY ??'
+
+        conexion.query(sql, [anio, columna_orden, tipo_orden], function(error, resultado, fields){
             if(error){
                 console.log("Hubo un error en la consulta", error.message);
                 return res.status(404).send("Hubo un error en la consulta");
@@ -130,24 +149,55 @@ function traerTodosLosGeneros (req,res) {
     });
 }
 
-// function infoPeli(req, res){
-//     let idSeleccionado = req.query.id
-//     let sql = 'SELECT * FROM pelicula where id = ?? '
+function infoPeli(req, res){
+    let id = req.params.id;
+   // let sql = 'select * from pelicula join actor_pelicula on actor_pelicula.pelicula_id = pelicula.id join actor on actor.id = actor_pelicula.actor_id  join genero on pelicula.genero_id = genero.id where pelicula.id = ?'
+   // de esta forma, se muestra el genero en el espacio asignado a les actores
 
-//     conexion.query(sql, [idSeleccionado], function(error, resultado, fields){
-//         if(error) {
-//             console.log("Hubo un error en la consulta", error.message);
-//             return res.status(404).send("Hubo un error en la consulta");
-//         }
-//         let response = {
-//             'peliculas': resultado
-//         };
-//         res.send(JSON.stringify(response));
-//     });
-// }
+    let sql = 'select * from pelicula join genero on pelicula.genero_id = genero.id join actor_pelicula on actor_pelicula.pelicula_id = pelicula.id join actor on actor.id = actor_pelicula.actor_id where pelicula.id = ?'
+    conexion.query(sql, [id], function(error, resultado, fields){
+        if(error) {
+            console.log("Hubo un error en la consulta", error.message);
+            return res.status(404).send("Hubo un error en la consulta");
+        }
+        let response = {
+            'pelicula': resultado[0],
+            'actores': resultado,
+            'genero': resultado,
+
+        };
+        console.log(response.genero[0].nombre)
+        res.send(JSON.stringify(response));
+    });
+}
+
+function recomendarPeli(req, res){
+    //Informacion obtenida por query.
+    let genero = req.query.genero;
+    let anio_inicio = req.query.anio_inicio;
+    let anio_fin = req.query.anio_fin;
+    let puntuacion = req.query.puntuacion;
+    //
+    let resultados;
+    let pelicula_actual;
+
+    //let sql = 'select * from pelicula ORDER BY ??'
+
+//     conexion.query(sql, [columna_orden, tipo_orden], function(error, resultado, fields){
+//        if(error){
+//            console.log("Hubo un error en la consulta", error.message);
+//            return res.status(404).send("Hubo un error en la consulta");
+//        }
+//        let response = {
+//            'peliculas': resultado
+//        };
+//        res.send(JSON.stringify(response));
+// });
+}
 
 module.exports = {
     traerTodasLasPeliculas : traerTodasLasPeliculas,
     traerTodosLosGeneros: traerTodosLosGeneros,
-   // infoPeli: infoPeli,
+    infoPeli: infoPeli,
+    recomendarPeli: recomendarPeli,
 };
