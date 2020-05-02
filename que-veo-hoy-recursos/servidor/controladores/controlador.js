@@ -7,9 +7,9 @@ function traerTodasLasPeliculas(req, res){
     let genero = req.query.genero;
     let columna_orden = req.query.columna_orden;
     let tipo_orden = req.query.tipo_orden;
-    let pagina = req.query.pagina;
-    let cantidad = req.query.cantidad;
-    let offset = pagina * cantidad
+    let cantidad = 20;
+    let pagina = cantidad *( req.query.pagina - 1);
+
 
     if (anio && titulo && genero){
         let sql = 'select * from pelicula where titulo REGEXP ? AND genero_id = ?  AND anio = ? ORDER BY ??'
@@ -57,8 +57,12 @@ function traerTodasLasPeliculas(req, res){
                 console.log("Hubo un error en la consulta", error.message);
                 return res.status(404).send("Hubo un error en la consulta");
             }
+            let conteo = resultado.length
+           console.log(conteo)
+
             let response = {
-                'peliculas': resultado
+                'peliculas': resultado,
+                'total': conteo,
             };
             res.send(JSON.stringify(response));
     });}
@@ -71,8 +75,12 @@ function traerTodasLasPeliculas(req, res){
                 console.log("Hubo un error en la consulta", error.message);
                 return res.status(404).send("Hubo un error en la consulta");
             }
+            let conteo = resultado.length
+           console.log(conteo)
+
             let response = {
-                'peliculas': resultado
+                'peliculas': resultado,
+                'total': conteo,
             };
             res.send(JSON.stringify(response));
     });}
@@ -85,8 +93,12 @@ function traerTodasLasPeliculas(req, res){
                 console.log("Hubo un error en la consulta", error.message);
                 return res.status(404).send("Hubo un error en la consulta");
             }
+            let conteo = resultado.length
+           console.log(conteo)
+
             let response = {
-                'peliculas': resultado
+                'peliculas': resultado,
+                'total': conteo,
             };
             res.send(JSON.stringify(response));
         });}
@@ -99,9 +111,13 @@ function traerTodasLasPeliculas(req, res){
                 console.log("Hubo un error en la consulta", error.message);
                 return res.status(404).send("Hubo un error en la consulta");
             }
-            let response = {
-                'peliculas': resultado
-            };
+            let conteo = resultado.length
+            console.log(conteo)
+ 
+             let response = {
+                 'peliculas': resultado,
+                 'total': conteo,
+             };
             res.send(JSON.stringify(response));
         });}
 
@@ -113,22 +129,32 @@ function traerTodasLasPeliculas(req, res){
                 console.log("Hubo un error en la consulta", error.message);
                 return res.status(404).send("Hubo un error en la consulta");
             }
-            let response = {
-                'peliculas': resultado
-            };
+            let conteo = resultado.length
+            console.log(conteo)
+ 
+             let response = {
+                 'peliculas': resultado,
+                 'total': conteo,
+             };
             res.send(JSON.stringify(response));
     });}
      else {
-        let sql = 'select * from pelicula ORDER BY ??'
+        let primeraFila = (cantidad*(pagina));
+        console.log(pagina)
+        let sql = 'select * from pelicula ORDER BY ?? LIMIT '+primeraFila+',' +cantidad;
 
          conexion.query(sql, [columna_orden, tipo_orden], function(error, resultado, fields){
             if(error){
                 console.log("Hubo un error en la consulta", error.message);
                 return res.status(404).send("Hubo un error en la consulta");
             }
-            let response = {
-                'peliculas': resultado
-            };
+            let conteo = resultado.length
+            console.log(conteo)
+ 
+             let response = {
+                 'peliculas': resultado,
+                 'total': conteo,
+             };
             res.send(JSON.stringify(response));
     });}
 
@@ -151,7 +177,7 @@ function traerTodosLosGeneros (req,res) {
 
 function infoPeli(req, res){
     let id = req.params.id;
-   // let sql = 'select * from pelicula join actor_pelicula on actor_pelicula.pelicula_id = pelicula.id join actor on actor.id = actor_pelicula.actor_id  join genero on pelicula.genero_id = genero.id where pelicula.id = ?'
+    //let sql = 'select * from pelicula join actor_pelicula on actor_pelicula.pelicula_id = pelicula.id join actor on actor.id = actor_pelicula.actor_id  join genero on pelicula.genero_id = genero.id where pelicula.id = ?'
    // de esta forma, se muestra el genero en el espacio asignado a les actores
 
     let sql = 'select * from pelicula join genero on pelicula.genero_id = genero.id join actor_pelicula on actor_pelicula.pelicula_id = pelicula.id join actor on actor.id = actor_pelicula.actor_id where pelicula.id = ?'
@@ -160,6 +186,7 @@ function infoPeli(req, res){
             console.log("Hubo un error en la consulta", error.message);
             return res.status(404).send("Hubo un error en la consulta");
         }
+        console.log(resultado);
         let response = {
             'pelicula': resultado[0],
             'actores': resultado,
