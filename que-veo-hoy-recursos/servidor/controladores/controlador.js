@@ -130,7 +130,24 @@ function traerTodosLosGeneros (req,res) {
     });
 }
 
+// function infoPeli(req, res){
+//     let idSeleccionado = req.query.id
+//     let sql = 'SELECT * FROM pelicula where id = ?? '
+
+//     conexion.query(sql, [idSeleccionado], function(error, resultado, fields){
+//         if(error) {
+//             console.log("Hubo un error en la consulta", error.message);
+//             return res.status(404).send("Hubo un error en la consulta");
+//         }
+//         let response = {
+//             'peliculas': resultado
+//         };
+//         res.send(JSON.stringify(response));
+//     });
+// }
+
 module.exports = {
     traerTodasLasPeliculas : traerTodasLasPeliculas,
     traerTodosLosGeneros: traerTodosLosGeneros,
+   // infoPeli: infoPeli,
 };
