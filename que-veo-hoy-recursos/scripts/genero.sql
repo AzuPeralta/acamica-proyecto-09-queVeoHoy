@@ -1,6 +1,6 @@
 CREATE TABLE `peliculas`.`genero` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(45) NOT NULL,
+  `nombre_genero` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`));
 
 ALTER TABLE `peliculas`.`genero` 
