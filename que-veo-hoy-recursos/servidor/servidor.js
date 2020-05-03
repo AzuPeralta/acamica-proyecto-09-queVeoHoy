@@ -28,6 +28,7 @@ app.get('/peliculas?', controlador.traerTodasLasPeliculas);
 app.get('/generos', controlador.traerTodosLosGeneros);
 
 app.get('/peliculas/:id', controlador.infoPeli);
+//Si sacamos los : de la ruta, deja de andar info peli y empieza a andar el recomendador.
 //para obtener la informacion de la pelicula, al conocer el id de la peli, se manda via path_params
 
 app.get('/peliculas/recomendacion?', controlador.recomendarPeli);

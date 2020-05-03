@@ -118,7 +118,7 @@ function recomendarPeli(req, res){
     if (genero || anio_inicio || anio_fin || puntuacion) queryParcial += ' where ';
 
     if (genero) {
-        queryParcial += 'genero.nombre = ? ';
+        queryParcial += 'genero.nombre_genero = ? ';
         filtrosRecomendacion.push(genero);
     }
 
@@ -151,7 +151,7 @@ function recomendarPeli(req, res){
        let response = {
            'peliculas': resultado
        };
-       console.log(response);
+       //console.log(response);
        res.send(JSON.stringify(response));
 });}
 
