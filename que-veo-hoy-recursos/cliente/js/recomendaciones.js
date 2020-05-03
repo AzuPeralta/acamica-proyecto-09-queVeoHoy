@@ -123,11 +123,11 @@ function ControladorRecomendaciones() {
         $.getJSON(servidor + ruta + query,
             function(data) {
                 //la respuesta del backend va a ser un array del peliculas. Antes de guardar ese array mezclamos su contenido
-                //para que no siempre se muestren las peliculas en el mismo
+                //para que no siempre se muestren las peliculas en el mismo orden.
                 var peliculas_desordenadas = self.desordenarArray(data.peliculas);
                 //se guardan las peliculas desordenadas
                 self.resultados = peliculas_desordenadas;
-                // se ejecuta la funcion seleccionarPelicula() 
+                // se ejecuta la funcion seleccionarPelicula()
                 self.seleccionarPelicula();
             });
 
