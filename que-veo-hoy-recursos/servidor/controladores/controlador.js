@@ -38,7 +38,7 @@ function traerTodasLasPeliculas(req, res){
 
     let paginacion = parcialQuery + ` limit ${limit}, ${cantidad}`;
 
-    let peliculas = '';
+  //  let peliculas = '';
 
     conexion.query(paginacion, filtros,
         function(error, resultado, fields){
