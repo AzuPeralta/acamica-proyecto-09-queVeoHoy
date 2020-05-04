@@ -142,6 +142,7 @@ function ControladorRecomendaciones() {
         } else {
             //se muestra la primera pelicula del array de resultados.
             var pelicula_mostrar = this.resultados[0];
+            console.log(pelicula_mostrar)
             //esta funcion elimina el primer resultado para que no vuelva a mostrarse
             this.resultados.shift();
             //se guardan los datos de la pelicula que se esta mostrando actualmente
@@ -150,7 +151,6 @@ function ControladorRecomendaciones() {
             this.mostrarPelicula(pelicula_mostrar);
         }
     }
-
     //esta funcion recibe una pelicula y se encarga de mostrarla
     this.mostrarPelicula = function(data) {
         $(".pregunta").hide();
@@ -159,7 +159,7 @@ function ControladorRecomendaciones() {
         $(".datos-pelicula .imagen").attr("src", data.poster);
         $(".datos-pelicula .trama").html(data.trama);
         $(".datos-pelicula .titulo").html(data.titulo);
-        $(".datos-pelicula .genero").html(data.nombre);
+        $(".datos-pelicula .genero").html(data.nombre_genero);
 
     }
 

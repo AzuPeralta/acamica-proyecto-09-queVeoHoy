@@ -110,7 +110,7 @@ function recomendarPeli(req, res){
 
 
     let filtrosRecomendacion = [];
-    let queryParcial = 'select * from pelicula, genero';
+    let queryParcial = 'select * from pelicula  join genero on genero_id = genero.id'
 
     if (genero || anio_inicio || anio_fin || puntuacion) queryParcial += ' where ';
 
@@ -133,7 +133,7 @@ function recomendarPeli(req, res){
 
     if (puntuacion) {
         if(genero || anio_inicio || anio_fin) queryParcial += 'and ';
-        queryParcial += 'pelicula.puntuacion = ?';
+        queryParcial += 'pelicula.puntuacion > ?';
         filtrosRecomendacion.push(puntuacion);
     }
 
@@ -146,7 +146,7 @@ function recomendarPeli(req, res){
            return res.status(404).send("Hubo un error en la consulta");
        }
        let response = {
-           'peliculas': resultado
+           'peliculas': resultado,
        };
        console.log(response);
        res.send(JSON.stringify(response));
