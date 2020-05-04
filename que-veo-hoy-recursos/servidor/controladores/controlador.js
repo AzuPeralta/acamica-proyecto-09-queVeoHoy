@@ -81,7 +81,6 @@ function traerTodosLosGeneros (req,res) {
 }
 
 function infoPeli(req, res){
-
     let id = req.params.id;
     let sql = 'select * from pelicula join genero on pelicula.genero_id = genero.id join actor_pelicula on actor_pelicula.pelicula_id = pelicula.id join actor on actor.id = actor_pelicula.actor_id where pelicula.id = ?'
 
@@ -91,14 +90,12 @@ function infoPeli(req, res){
             return res.status(404).send("Hubo un error en la consulta");
         }
         let resultadoGenero = resultado[0].nombre_genero;
-       // console.log(resultadoGenero);
 
         let response = {
             'pelicula': resultado[0],
             'actores': resultado,
             'genero': resultadoGenero
         };
-        console.log(response);
         res.send(JSON.stringify(response));
     });
 };
@@ -151,7 +148,7 @@ function recomendarPeli(req, res){
        let response = {
            'peliculas': resultado
        };
-       //console.log(response);
+       console.log(response);
        res.send(JSON.stringify(response));
 });}
 
