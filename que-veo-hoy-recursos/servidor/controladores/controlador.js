@@ -10,37 +10,29 @@ function traerTodasLasPeliculas(req, res){
     let pagina = req.query.pagina;
     let limit = (pagina - 1) * cantidad;
     let filtros = [];
-    let parcialQuery = 'select * from pelicula';
+    let parcialQuery = `select * from pelicula`;
 
-    if (genero || titulo || anio) parcialQuery += ' where ';
+    if (genero || titulo || anio) parcialQuery += ` where `;
 
     if (genero) {
-        parcialQuery += 'genero_id = ? ';
-        filtros.push(genero);
+        parcialQuery += `genero_id = ${genero} `;
     }
 
     if (titulo) {
-        if(genero) parcialQuery += 'and ';
-        parcialQuery += 'titulo REGEXP ? ';
-        filtros.push(titulo);
+        if(genero) parcialQuery += `and `;
+        parcialQuery += `titulo like "%${titulo}%" `;
     }
 
     if (anio) {
-        if(titulo || genero) parcialQuery += 'and ';
-        parcialQuery += 'anio = ? ';
-        filtros.push(anio);
+        if(titulo || genero) parcialQuery += `and `;
+        parcialQuery += `anio = ${anio} `;
     }
 
-    filtros.push(columna_orden);
-    filtros.push(tipo_orden);
-
-    parcialQuery += ' order by ??';
+    parcialQuery += ` order by ${columna_orden} ${tipo_orden}`;
 
     let paginacion = parcialQuery + ` limit ${limit}, ${cantidad}`;
 
-  //  let peliculas = '';
-
-    conexion.query(paginacion, filtros,
+    conexion.query(paginacion,
         function(error, resultado, fields){
 
             if(error){
@@ -82,9 +74,9 @@ function traerTodosLosGeneros (req,res) {
 
 function infoPeli(req, res){
     let id = req.params.id;
-    let sql = 'select * from pelicula join genero on pelicula.genero_id = genero.id join actor_pelicula on actor_pelicula.pelicula_id = pelicula.id join actor on actor.id = actor_pelicula.actor_id where pelicula.id = ?'
+    let sql = `select * from pelicula join genero on pelicula.genero_id = genero.id join actor_pelicula on actor_pelicula.pelicula_id = pelicula.id join actor on actor.id = actor_pelicula.actor_id where pelicula.id = ${id}`
 
-    conexion.query(sql, [id], function(error, resultado, fields){
+    conexion.query(sql, function(error, resultado, fields){
         if(error) {
             console.log("Hubo un error en la consulta", error.message);
             return res.status(404).send("Hubo un error en la consulta");
@@ -101,7 +93,6 @@ function infoPeli(req, res){
 };
 
 function recomendarPeli(req, res){
-    console.log('entro a recomendaciones');
     //Informacion obtenida por query.
     let genero = req.query.genero;
     let anio_inicio = req.query.anio_inicio;
@@ -110,7 +101,7 @@ function recomendarPeli(req, res){
 
 
     let filtrosRecomendacion = [];
-    let queryParcial = 'select * from pelicula  join genero on genero_id = genero.id'
+    let queryParcial = 'select * from genero join pelicula on genero_id = genero.id'
 
     if (genero || anio_inicio || anio_fin || puntuacion) queryParcial += ' where ';
 
@@ -137,9 +128,6 @@ function recomendarPeli(req, res){
         filtrosRecomendacion.push(puntuacion);
     }
 
-    console.log(queryParcial);
-    console.log(filtrosRecomendacion);
-
     conexion.query(queryParcial, filtrosRecomendacion, function(error, resultado, fields){
        if(error){
            console.log("Hubo un error en la consulta", error.message);
@@ -148,7 +136,6 @@ function recomendarPeli(req, res){
        let response = {
            'peliculas': resultado,
        };
-       console.log(response);
        res.send(JSON.stringify(response));
 });}
 
